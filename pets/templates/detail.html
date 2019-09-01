@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Pet Details{% endblock title %}
+
+{% block content %}
+<div class="jumbotron" style="background-color: rgb(170,170,170)">
+	<h2 class="mb-2">{{pet.name|title}}:</h2>
+	<hr>
+	<div class="row my-3">
+		<div class="col">
+			<h6>Available:<span class='text-muted'>
+			{% if pet.available %}
+				Yes
+			{% else %}
+				No
+			{% endif %}
+			</span></h6>
+			{% if pet.owner.first_name or pet.owner.last_name %}
+				<h6>Owned by:<span class="text-muted"> {{pet.owner.first_name|title}} {{pet.owner.last_name|title}}</span></h6>
+			{% else  %}
+				<h6>Owned by:<span class="text-muted"> {{pet.owner|title}}</span></h6>
+			{% endif %}
+			<h6>Price:<span class="text-muted"> {{pet.price}} KWD</span></h6>
+		</div>
+		<div class="col">
+			<h6>Gender:<span class="text-muted"> {{pet.gender|lower|capfirst}}</span></h6>
+			<h6>Type:<span class="text-muted"> {{pet.species|lower|capfirst}}</span></h6>
+			<h6>Breed:<span class="text-muted">
+				{% if pet.breed %}
+					{{pet.breed}}
+				{% else %}
+					Unknown
+				{% endif %}
+			</span></h6>
+		</div>
+	</div>
+	{% if pet.image %}
+			<img src="{{pet.image.url}}" alt="An image of {{pet.name}}." class="rounded mx-auto d-block img-fluid">
+	{% endif %}
+	<br><br>
+	<div class="text-center mx-auto float-center">
+		{% if request.user == pet.owner or request.user.is_staff %}
+			<a href="{% url 'pet-update' pet.id %}" class="btn btn-success">Update</a>
+			<a href="{% url 'pet-delete' pet.id %}" class="btn btn-outline-danger">Delete</a>
+		{% endif %}
+		<a href="{% url 'pet-list' %}" class="btn btn-primary">Back to list</a>
+	</div>
+</div>
+{% endblock content %}

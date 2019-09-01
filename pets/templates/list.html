@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}List of Pets{% endblock title %}
+
+{% block content %}
+
+<div class="row">
+	<div class="col-4 my-3">
+		<div class="card h-100">
+			<div class="card-body">
+			<form>
+				<h5>Sort by:</h5>
+				{% for sorttype in sort %}
+					<input type="submit" name='o' value='{{sorttype}}' class='btn btn-outline-info btn-sm my-2 ml-3'>
+				{% endfor %}
+			</form>
+			</div>
+		</div>
+	</div>
+	{% for pet in pets %}
+		<div class="col-4 my-3">
+			<div class="card h-100" style="background-color: rgb(170,170,170);">
+				{% if pet.image %}
+					<img src="{{pet.image.url}}" class="card-img-top" alt="An image of {{pet.name}}.">
+				{% else %}
+				{% load static %}
+					<img src="{% static 'placeholder.jpg' %}" class="card-img-top" alt="Placeholder image.">
+				{% endif %}
+				<div class="card-body">
+					<h5 class="card-title text-center">{{pet.name}}</h5>
+					<hr>
+					<p class="card-text">Availability: <span class="text-muted"> 
+					{% if pet.available %}
+						For sale
+					{% else %}
+						Sold
+					{% endif %}
+					</span></p>
+					<p class="card-text">Type: <span class="text-muted"> 
+					{{pet.species|lower|capfirst}}
+					</span></p>
+					<p class="card-text">Last Updated: <span class="text-muted"> 
+					{{pet.last_updated|timesince}} ago
+					</span></p>
+				</div>
+				<a href="{% url 'pet-detail' pet.id %}" class="btn btn-primary">Details</a>
+			</div>
+		</div>
+	{% endfor %}
+</div>
+{% endblock content %}
